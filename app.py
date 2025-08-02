@@ -32,6 +32,9 @@ def admin_login():
             return render_template("admin_login.html", form=form, error="Invalid Password and/or Username")
     return render_template("admin_login.html", form=form)
 
+@app.route("/")
+def index():
+    return render_template("index.html")
 
 
 def clean(text: str) -> str:
