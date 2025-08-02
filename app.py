@@ -88,6 +88,8 @@ def admin_login():
             username = clean(data.get("username"))
             password = clean(data.get("password"))
             client_id = clean(data.get("clientid"))
+            logging.info(ADMIN_USERNAME)
+            logging.info(ADMIN_PASSWORD)
             if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
                 return jsonify({
                     "result": sign_client_id(client_id)
