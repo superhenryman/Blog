@@ -55,8 +55,8 @@ def init_db():
             cursor.execute("""
                 CREATE TABLE IF NOT EXISTS blog_posts(
                     id SERIAL PRIMARY KEY,
-                    post TEXT NOT NULL,           
-                );""")
+                    post TEXT NOT NULL           
+                )""")
             conn.commit()
             cursor.close()
     except Exception as e:
