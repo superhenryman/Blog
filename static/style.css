@@ -4,3 +4,8 @@ body {
     margin-top: 100px;
     /*i tried making my own font, got stuck behind a paywall :(*/
 }
+
+#login {
+    background-color: rgb(23, 54, 192);
+    color: black;
+}
