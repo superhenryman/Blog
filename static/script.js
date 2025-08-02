@@ -12,9 +12,6 @@ async function getPosts() {
 
         const container = document.getElementById("blogposts");
         container.innerHTML = "";
-        array.forEach(element => {
-            
-        });
         posts.forEach(content => {
             const postEl = document.createElement("div");
             postEl.className = "post";
@@ -28,6 +25,12 @@ async function getPosts() {
     } finally {
         document.getElementById("loading").style.display = "none";
     }
+}
+
+function handleError(msg) {
+    const errorel = document.getElementById("error");
+    errorel.style.display = "block";
+    errorel.innerText = msg;
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
