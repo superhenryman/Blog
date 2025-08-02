@@ -20,12 +20,12 @@ class LoginForm(FlaskForm):
     password = StringField("Password", validators=[DataRequired()])
     submit = SubmitField('Submit')
 
-@app.route("/adminlogin")
+@app.route("/adminlogin", methods=["GET", "POST"])
 def admin_login():
     form = LoginForm()
     if form.validate_on_submit():
-        username = clean(form.username)
-        password = clean(form.password)
+        username = clean(form.username.data)
+        password = clean(form.password.data)
         if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
             return redirect("/adminPostPlace")
         else:
