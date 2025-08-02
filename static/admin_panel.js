@@ -5,9 +5,6 @@ async function isAllowed() {
     // i'm a masochist so i'm dealing with undefined and null here. be careful.
     const response = await fetch("/verify_signature", {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
         body: JSON.stringify({
             clientId: clientId,
             signature: signature
@@ -43,9 +40,6 @@ form.addEventListener("submit", async (e) => {
     e.preventDefault();
     await fetch("/adminPostPlace", {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
         body: JSON.stringify({
             content: document.getElementById("content"),
             clientId: localStorage.getItem("clientId"),
