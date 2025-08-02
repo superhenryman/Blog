@@ -26,7 +26,8 @@ form.addEventListener("submit", async (e) => {
         // THIS MEANS WE GOT IT BABY
         const data = await response.json();
         const signature = data.result;
-        alert(`Signature: ${signature}`);
+        localStorage.setItem("signature", signature);
+        window.location.href = "https://web-production-5d1da.up.railway.app/adminPostPlace";
     } else {
         const data = await response.json();
         const error = data.error;

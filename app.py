@@ -106,6 +106,6 @@ def admin_login():
 
 @app.route("/adminPostPlace", methods=["GET", "POST"])
 def admin_post():
-    return render_template("admin_login.html")
+    return render_template("admin_panel.html")
 
 if __name__ == "__main__": app.run(debug=True) # turn off debug later
