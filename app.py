@@ -8,9 +8,6 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 
-
-
-
 logging.basicConfig(level=logging.INFO)
 app = Flask(__name__)
 database_url = os.getenv("DATABASE_URL")
