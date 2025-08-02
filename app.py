@@ -93,6 +93,8 @@ def admin_login():
                     "result": sign_client_id(client_id)
                 }), 200 # we return signature, and 200
             else:
+                logging.info(f"Username: {username}")
+                logging.info(f"Password: {password}")
                 return jsonify({
                     "error": "Invalid Credentials, dumbass."
                 }), 400
@@ -107,5 +109,10 @@ def admin_login():
 @app.route("/adminPostPlace", methods=["GET", "POST"])
 def admin_post():
     return render_template("admin_panel.html")
+
+@app.route("/verify_signature", methods=["POST"])
+def verify():
+    data = request.json
+    client_id = data.get("clientid")
 
 if __name__ == "__main__": app.run(debug=True) # turn off debug later
