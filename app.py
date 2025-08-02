@@ -4,9 +4,7 @@ import logging
 import os
 import time
 import html
-from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
-from wtforms.validators import DataRequired
+from security import verify_signature, sign_client_id
 
 logging.basicConfig(level=logging.INFO)
 app = Flask(__name__)
@@ -15,27 +13,9 @@ ADMIN_PASSWORD = os.getenv("PASSWORD")
 ADMIN_USERNAME = os.getenv("USERNAME")
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")  # Set a strong secret key
 
-class LoginForm(FlaskForm):
-    username = StringField("Username", validators=[DataRequired()])
-    password = StringField("Password", validators=[DataRequired()])
-    submit = SubmitField('Submit')
-
-@app.route("/adminlogin", methods=["GET", "POST"])
-def admin_login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        username = clean(form.username.data)
-        password = clean(form.password.data)
-        if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
-            return redirect("/adminPostPlace")
-        else:
-            return render_template("admin_login.html", form=form, error="Invalid Password and/or Username")
-    return render_template("admin_login.html", form=form)
-
 @app.route("/")
 def index():
     return render_template("index.html")
-
 
 def clean(text: str) -> str:
     return str(html.escape(text, quote=True))
@@ -71,6 +51,15 @@ def require_password():
     if request.headers.get('X-API-KEY') != ADMIN_PASSWORD:
         abort(403)
 
+def insert_post(post):
+    with get_connection() as conn:
+        try:
+            cur = conn.cursor()
+            cur.execute("INSERT INTO blog_posts (post) VALUES (%s)", (post, ))
+            conn.commit()
+            cur.close()
+        except Exception as e:
+            logging.error(f"Error in insert_post(): {e}")
 
 @app.route("/retrieveposts")
 def get_posts():
@@ -88,5 +77,35 @@ def get_posts():
             "error": "Could not retrieve posts."
         })
 
+
+@app.route("/adminlogin", methods=["GET", "POST"])
+def admin_login():
+    if request.method == "POST":
+        try:
+            data = request.json
+            if not data:
+                return jsonify({"error": "Where's your JSON? did you forget it like how your dad forgot you?"})
+            username = clean(data.get("username"))
+            password = clean(data.get("password"))
+            client_id = clean(data.get("clientid"))
+            if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+                return jsonify({
+                    "result": sign_client_id(client_id)
+                }), 200 # we return signature, and 200
+            else:
+                return jsonify({
+                    "error": "Invalid Credentials, dumbass."
+                }), 400
+        except Exception as e:
+            logging.error(f"Error occured in admin_login(), {e}")
+            return jsonify({
+                "error": e
+            }), 500
+    else:
+        return render_template("admin_login.html")
+
+@app.route("/adminPostPlace", methods=["GET", "POST"])
+def admin_login():
+    return render_template("admin_login.html")
 
 if __name__ == "__main__": app.run(debug=True) # turn off debug later
