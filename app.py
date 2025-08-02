@@ -13,6 +13,10 @@ ADMIN_PASSWORD = os.getenv("PASSWORD")
 ADMIN_USERNAME = os.getenv("USERNAME")
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")  # Set a strong secret key
 
+@app.errorhandler(404)
+def page_not_found():
+    return render_template("pagenotfound.html")
+
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -61,7 +65,7 @@ def insert_post(post):
         except Exception as e:
             logging.error(f"Error in insert_post(): {e}")
 
-@app.route("/retrieveposts")
+@app.route("/posts")
 def get_posts():
     try:
         with get_connection() as conn:
@@ -87,7 +91,7 @@ def admin_login():
                 return jsonify({"error": "Where's your JSON? did you forget it like how your dad forgot you?"})
             username = clean(data.get("username"))
             password = clean(data.get("password"))
-            client_id = clean(data.get("clientid"))
+            client_id = data.get("clientid")
             if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
                 return jsonify({
                     "result": sign_client_id(client_id)
@@ -106,11 +110,34 @@ def admin_login():
 
 @app.route("/adminPostPlace", methods=["GET", "POST"])
 def admin_post():
-    return render_template("admin_panel.html")
+    if not request.method == "POST": render_template("admin_panel.html")
+    try:
+        data = request.json
+        if not data: return jsonify({"error": "Where's your JSON? did you forget it like how your dad forgot you?"})
+        content = clean(data.get("content"))
+        client_id = data.get("client_id")
+        signature = data.get("signature")
+        if not verify_signature(client_id, signature):
+            logging.error(f"Someone tried posting without a signature, therefore, their ip is {request.remote_addr}")
+            return jsonify({
+                "error": "Not authenticated."
+            }), 400
+        insert_post(post=content)
+        return jsonify({
+            "result": "success"
+        }), 200
+    except Exception as e:
+        logging.error(f"Error occured in admin_post() {e}")
+        return jsonify({
+            "error": str(e)
+        }),
 
 @app.route("/verify_signature", methods=["POST"])
 def verify():
     data = request.json
     client_id = data.get("clientid")
-
+    signature = data.get("signature")
+    return jsonify({
+        "result": str(verify_signature(client_id, signature)).lower() # messy ik but js is a bitch
+    })
 if __name__ == "__main__": app.run(debug=True) # turn off debug later

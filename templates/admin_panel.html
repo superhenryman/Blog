@@ -4,10 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
+    <style>
+        #content {
+            resize: vertical;
+            min-height: 120px;
+            font-family: "Arial", cursive;
+            font-size: 15px;
+            line-height: 1.5;
+            padding: 10px;
+            border: 1px solid #aaa;
+            background-color: #fff;
+            margin-bottom: 12px;
+            border-radius: 3px;
+        } /* copy pasted code from the wall */
+    </style>
 </head>
 <body>
     <h1>Welcome to the Admin Panel!</h1>
     <p>If you're here and you're not authenticated? What's wrong with you?</p>
-    <script src="/static/admin_panel.js"></script>
+    <form id="postForm">
+        <textarea name="content" id="content" placeholder="post here please :D" required></textarea>
+        <button type="submit">Post</button>
+    </form>
+    <!--<script src="/static/admin_panel.js"></script>-->
 </body>
 </html>
