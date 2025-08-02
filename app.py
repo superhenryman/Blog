@@ -99,13 +99,13 @@ def admin_login():
         except Exception as e:
             logging.error(f"Error occured in admin_login(), {e}")
             return jsonify({
-                "error": e
+                "error": str(e)
             }), 500
     else:
         return render_template("admin_login.html")
 
 @app.route("/adminPostPlace", methods=["GET", "POST"])
-def admin_login():
+def admin_post():
     return render_template("admin_login.html")
 
 if __name__ == "__main__": app.run(debug=True) # turn off debug later
