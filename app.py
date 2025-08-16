@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template, redirect, request, abort
+from flask import Flask, jsonify, render_template, request, abort
 import psycopg2
 import logging
 import os
@@ -11,7 +11,7 @@ app = Flask(__name__)
 database_url = os.getenv("DATABASE_URL")
 ADMIN_PASSWORD = os.getenv("PASSWORD")
 ADMIN_USERNAME = os.getenv("USERNAME")
-app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")  # Set a strong secret key
+app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 
 @app.errorhandler(404)
 def page_not_found():
