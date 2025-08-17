@@ -41,7 +41,7 @@ const form = document.getElementById("postForm");
 
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    await fetch("/adminPostPlace", {
+    const response = await fetch("/adminPostPlace", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
