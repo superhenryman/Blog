@@ -106,8 +106,7 @@ def admin_login():
 
 @app.route("/adminPostPlace", methods=["GET", "POST"])
 def admin_post():
-    if request.method == "GET": render_template("admin_panel.html")
-    if not request.method == "POST": render_template("admin_panel.html")
+    if not request.method == "POST": return render_template("admin_panel.html")
     try:
         data = request.json
         if not data: return jsonify({"error": "Where's your JSON? did you forget it like how your dad forgot you?"})
