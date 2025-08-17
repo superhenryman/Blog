@@ -126,7 +126,7 @@ def admin_post():
         logging.error(f"Error occured in admin_post() {e}")
         return jsonify({
             "error": str(e)
-        }),
+        }), 500
 
 @app.route("/verify_signature", methods=["POST"])
 def verify():
