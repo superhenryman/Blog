@@ -13,6 +13,12 @@ ADMIN_PASSWORD = os.getenv("PASSWORD")
 ADMIN_USERNAME = os.getenv("USERNAME")
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 
+def test():
+    if not verify_signature("balls", sig):
+        print("Signatures are not working.")
+    else:
+        print("Signatures are working.")
+
 @app.route("/")
 def index():
     return render_template("index.html")
