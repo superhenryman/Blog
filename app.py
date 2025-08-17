@@ -134,6 +134,6 @@ def verify():
     client_id = data.get("clientid")
     signature = data.get("signature")
     return jsonify({
-        "result": str(verify_signature(client_id, signature)).lower() # messy ik but js is a bitch
+        "result": verify_signature(client_id, signature)
     })
 if __name__ == "__main__": app.run(debug=True) # turn off debug later
