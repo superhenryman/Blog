@@ -13,10 +13,6 @@ ADMIN_PASSWORD = os.getenv("PASSWORD")
 ADMIN_USERNAME = os.getenv("USERNAME")
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 
-@app.errorhandler(404)
-def page_not_found():
-    return render_template("pagenotfound.html")
-
 @app.route("/")
 def index():
     return render_template("index.html")
