@@ -106,6 +106,7 @@ def admin_login():
 
 @app.route("/adminPostPlace", methods=["GET", "POST"])
 def admin_post():
+    if request.method == "GET": render_template("admin_panel.html")
     if not request.method == "POST": render_template("admin_panel.html")
     try:
         data = request.json
