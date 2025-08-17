@@ -113,7 +113,7 @@ def admin_post():
         content = clean(data.get("content"))
         client_id = data.get("client_id")
         signature = data.get("signature")
-        if not verify_signature(client_id, signature):
+        if verify_signature(client_id, signature):
             logging.error(f"Someone tried posting without a signature, therefore, their ip is {request.remote_addr}")
             return jsonify({
                 "error": "Not authenticated."
