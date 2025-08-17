@@ -46,5 +46,12 @@ form.addEventListener("submit", async (e) => {
             signature: localStorage.getItem("signature")
         })
     });
+    if (response.ok) {
+        alert("Post submitted successfully!");
+        document.getElementById("content").value = "";
+    } else {
+        const data = await response.json();
+        alert(`Error ${data.error}`);
+    }
 });
 
