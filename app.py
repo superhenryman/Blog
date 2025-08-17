@@ -95,7 +95,7 @@ def admin_login():
             else:
                 return jsonify({
                     "error": "Invalid Credentials, dumbass."
-                }), 400
+                }), 401
         except Exception as e:
             logging.error(f"Error occured in admin_login(), {e}")
             return jsonify({
@@ -106,8 +106,7 @@ def admin_login():
 
 @app.route("/adminPostPlace", methods=["GET", "POST"])
 def admin_post():
-    if request.method == "POST": return render_template("admin_panel.html")
-    else: redirect("https://littlesecret.up.railway.app/")
+    if not request.method == "POST": return redirect("google.com")
     try:
         data = request.json
         if not data: return jsonify({"error": "Where's your JSON? did you forget it like how your dad forgot you?"})
@@ -118,7 +117,7 @@ def admin_post():
             logging.error(f"Someone tried posting without a signature, therefore, their ip is {request.remote_addr}")
             return jsonify({
                 "error": "Not authenticated."
-            }), 400
+            }), 401
         insert_post(post=content)
         return jsonify({
             "result": "success"
