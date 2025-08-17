@@ -14,6 +14,7 @@ ADMIN_USERNAME = os.getenv("USERNAME")
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 
 def test():
+    sig = sign_client_id("balls")
     if not verify_signature("balls", sig):
         print("Signatures are not working.")
     else:
