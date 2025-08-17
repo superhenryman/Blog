@@ -47,7 +47,7 @@ form.addEventListener("submit", async (e) => {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            content: document.getElementById("content"),
+            content: document.getElementById("content").value,
             clientId: localStorage.getItem("clientId"),
             signature: localStorage.getItem("signature")
         })
