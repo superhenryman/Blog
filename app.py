@@ -18,7 +18,7 @@ def test():
         print("Signatures are not working.")
     else:
         print("Signatures are working.")
-
+test()
 @app.route("/")
 def index():
     return render_template("index.html")
