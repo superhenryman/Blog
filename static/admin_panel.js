@@ -15,7 +15,7 @@ async function isAllowed() {
     });
     if (response.ok) {
         const data = await response.json();
-        if (!data.result) { // result will be boolean
+        if (data.result) { // result will be boolean
             alert("You don't belong here.")
             document.write("Get out.")
         }
