@@ -106,7 +106,6 @@ def admin_login():
 
 @app.route("/adminPostPlace", methods=["GET", "POST"])
 def admin_post():
-    if not request.method == "POST": return redirect("google.com")
     try:
         data = request.json
         if not data: return jsonify({"error": "Where's your JSON? did you forget it like how your dad forgot you?"})
