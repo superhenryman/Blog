@@ -27,7 +27,7 @@ form.addEventListener("submit", async (e) => {
         const data = await response.json();
         const signature = data.result;
         localStorage.setItem("signature", signature);
-        window.location.href = "https://web-production-5d1da.up.railway.app/adminPostPlace";
+        window.location.href = "https://shmblog.up.railway.app/adminPostPlace";
     } else {
         const data = await response.json();
         const error = data.error;
