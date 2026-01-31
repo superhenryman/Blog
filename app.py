@@ -118,6 +118,8 @@ def login_check():
     data = request.json
     username = data.get("username", "")
     password = data.get("password", "")
+    logging.info(username)
+    logging.info(password)
     if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
         session["username"] = username
         session["password"] = password
