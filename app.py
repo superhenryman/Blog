@@ -116,6 +116,7 @@ def create_post():
 @csrf.exempt
 def login_check():
     data = request.json
+    logging.info(data)
     username = data.get("username", "")
     password = data.get("password", "")
     logging.info(username)
