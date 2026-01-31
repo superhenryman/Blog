@@ -100,9 +100,10 @@ def index(): return render_template("index.html")
 
 @app.route("/admin_panel", methods=["GET"])
 def admin_panel():
-    if session.get("username") != ADMIN_USERNAME and session.get("password") != ADMIN_PASSWORD:
-        return redirect(url_for(index))
-    return render_template("admin_panel.html")
+    if session.get("username") == ADMIN_USERNAME and session.get("password") == ADMIN_PASSWORD:
+        return render_template("admin_panel.html")
+    else:
+        return redirect(url_for("index"))
 
 @app.route("/create_post", methods=["POST"])
 def create_post():
@@ -116,11 +117,8 @@ def create_post():
 @csrf.exempt
 def login_check():
     data = request.json
-    logging.info(data)
     username = data.get("username", "")
     password = data.get("password", "")
-    logging.info(username)
-    logging.info(password)
     if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
         session["username"] = username
         session["password"] = password
