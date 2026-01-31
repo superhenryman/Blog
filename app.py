@@ -122,7 +122,9 @@ def login_check():
     if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
         session["username"] = username
         session["password"] = password
-        return redirect(url_for("admin_panel"))
+        return jsonify({
+            "success": True
+        }), 200
     else:
         return jsonify({
             "success": False
@@ -130,6 +132,8 @@ def login_check():
     
 @app.route("/admin_login")
 def admin_login():
+    if session.get("username") == ADMIN_USERNAME and session.get("password") == ADMIN_PASSWORD:
+        return redirect(url_for("admin_panel"))
     return render_template("admin_login.html")
 
 
