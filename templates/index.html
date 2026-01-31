@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>superhenryman's blog</title>
-    <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico')}}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css' )}}">
 </head>
 <body>
     <p id="error" style="display: none; color: red;"></p>
@@ -14,7 +14,7 @@
     <h1>Hi, welcome to my blog!</h1>
     <p>I'll post... whatever people on blogs post.</p>
     <p>and no this isn't wordpress i'd rather fall into lava than use <em>PHP...</em></p>
-    <div id="blogposts"></div>
-    <script src="/static/script.js"></script>
+    <article class="blogposts" id="blogposts"></article>
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
 </body>
 </html>

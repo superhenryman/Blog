@@ -1,37 +1,16 @@
-const form = document.getElementById("LoginForm")
+const form = document.getElementById("login_form");
 
-function getClientId() {
-    let clientId = localStorage.getItem("clientId");
-    if (!clientId) {
-        clientId = crypto.randomUUID();
-        localStorage.setItem("clientId", clientId);
-    }
-    return clientId;
-}
-
-form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const response = await fetch("/adminlogin", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
+form.addEventListener("submit", async (event)=> {
+    event.preventDefault();
+    const username = document.getElementById("username");
+    const password = document.getElementById("password");
+    await fetch("/login_check", {
+        method: "post",
+        headers: {"Content-Type": "application/json"},
+        credentials: "include",
         body: JSON.stringify({
-            username: document.getElementById("username").value,
-            password: document.getElementById("password").value,
-            clientid: getClientId(),
+            "username": username,
+            "password": password
         })
     });
-    if (response.ok) {
-        // THIS MEANS WE GOT IT BABY
-        const data = await response.json();
-        const signature = data.result;
-        localStorage.setItem("signature", signature);
-        window.location.href = "https://shmblog.up.railway.app/adminPostPlace";
-    } else {
-        const data = await response.json();
-        const error = data.error;
-        alert(`Error: ${error}`);
-    }
 });
-
