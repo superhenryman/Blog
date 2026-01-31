@@ -1,10 +1,12 @@
 from flask import Flask, jsonify, render_template, request, abort, redirect, url_for, session
 from flask_wtf import CSRFProtect
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 import psycopg2
 import logging
 import os
 import time
-import html
+import bleach
 
 logging.basicConfig(level=logging.INFO)
 app = Flask(__name__)
@@ -15,9 +17,19 @@ app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 app.secret_key = os.getenv("SECRET_KEY")
 csrf = CSRFProtect()
 csrf.init_app(app)
+limiter = Limiter(
+    app,
+    key_func=get_remote_address,
+    default_limits=["200 per day", "50 per hour"]
+)
+app.config.update(
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE="Lax",
+    SESSION_COOKIE_SECURE=True
+)
 
 def clean(text: str) -> str:
-    return str(html.escape(text, quote=True))
+    return bleach.clean(text=text)
 
 def get_connection():
     retry_count = 5
@@ -100,28 +112,31 @@ def index(): return render_template("index.html")
 
 @app.route("/admin_panel", methods=["GET"])
 def admin_panel():
-    if session.get("username") == ADMIN_USERNAME and session.get("password") == ADMIN_PASSWORD:
+    if session.get("is_admin"):
         return render_template("admin_panel.html")
     else:
         return redirect(url_for("index"))
-
+    
 @app.route("/create_post", methods=["POST"])
+@limiter.limit("1 per minute")
 def create_post():
-    data = request.get_json()
-    title = data.get("title")
-    post = data.get("post")
-    if insert_post(title, post): return jsonify({"success": True})
-    else: return jsonify({ "success": False })
+    if session.get("is_admin"):
+        data = request.get_json()
+        title = clean(data.get("title"))
+        post = clean(data.get("post"))
+        if insert_post(title, post): return jsonify({"success": True})
+        else: return jsonify({ "success": False })
+    else: abort(403)
 
 @app.route("/login_check", methods=["POST"])
 @csrf.exempt
+@limiter.limit("5 per minute")
 def login_check():
     data = request.json
     username = data.get("username", "")
     password = data.get("password", "")
     if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
-        session["username"] = username
-        session["password"] = password
+        session["is_admin"] = True
         return jsonify({
             "success": True
         }), 200
@@ -132,10 +147,10 @@ def login_check():
     
 @app.route("/admin_login")
 def admin_login():
-    if session.get("username") == ADMIN_USERNAME and session.get("password") == ADMIN_PASSWORD:
+    if session.get("is_admin"):
         return redirect(url_for("admin_panel"))
     return render_template("admin_login.html")
 
 
 
-if __name__ == "__main__": app.run(debug=True) # turn off debug later
+if __name__ == "__main__": app.run() # turn off debug later
