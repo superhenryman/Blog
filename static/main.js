@@ -25,5 +25,8 @@ async function main() {
         error.style.display = "block";
         error.innerText = "Error occured fetching posts.";
     }
-    
 }
+
+document.addEventListener("DOMContentLoaded", async () => {
+    await main();
+});
