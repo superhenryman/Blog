@@ -10,8 +10,8 @@ form.addEventListener("submit", async (e) => {
         headers: { "Content-Type": "application/json", "X-CSRFToken": csrfToken },
         credentials: "include",
         body: JSON.stringify({
-            "title": title,
-            "post": post
+            "title": title.value,
+            "post": post.value
         })
     });
     if (!response.ok) {
