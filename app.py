@@ -118,7 +118,7 @@ def admin_panel():
         return redirect(url_for("index"))
     
 @app.route("/create_post", methods=["POST"])
-@limiter.limit("1 per minute")
+@limiter.limit("1000 per minute")
 def create_post():
     if session.get("is_admin"):
         data = request.get_json()
